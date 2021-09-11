@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <title>마우스 이벤트</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/rects.css" rel="stylesheet">
+    <script type="text/javascript" src="jquery-3.1.1.js"></script>
+    <script type="text/javascript">
+        // var colorHolder;
+
+        $(document).ready(function () {
+            console.log("ready!");
+            addHolder(".rect.red", "pink");
+            addHolder(".rect.blue", "pink");
+            /*
+            var pos { left : 23333, top : 299393}
+            */
+
+            $(".rect").click(function (e) {
+                var target = e.target;
+                console.log("clicked!");
+                console.log("target: ", target);
+
+                logPos("Position", $(target).position());
+                logPos("Parent offset", $(target).parent().offset());
+                logPos("Clicked Offset", [e.pageX, e.pageY]);
+            });
+        });
+
+        function logPos(name, pos){
+             console.log ( name , ": (", pos.left, ",", pos.top,")");
+        }
+
+        function addHolder(target, hlColor){
+            var holder = mouseHolder(target, hlColor);
+            $(target).mousedown(holder.onMousedown)
+                     .mouseup(holder.onMouseup)
+                     .mousemove(holder.onMousemove);
+                    //  .mouseleave(holder.onMouseup);
+        }
+
+        function mouseHolder(target, hlColor) {
+            var orgColor = $(target).css("backgroundColor");
+            
+            var dx = $(target).position().left;
+            var dy =  $(target).position().top;
+            var dragging = false;
+
+            function updateDeltaPos(e){                
+                dx = e.pageX - $(target).offset().left ;
+                dy =  e.pageY - $(target).offset().top ;
+            }
+
+            return {
+                onMousedown: function(e) {
+                    $(target).css("backgroundColor", hlColor);
+                    updateDeltaPos(e);
+                    dragging = true;
+                },
+                onMouseup: function() {
+                    $(target).css("backgroundColor", orgColor);
+                    dragging = false;
+                },
+                onMousemove: function(e) {
+                    if(dragging == true) {
+                        var poffset = $(target).parent().offset();
+                        $(target).css('left', e.pageX - dx - poffset.left);
+                        $(target).css('top', e.pageY - dy - poffset.top );
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="board">
+        <div class="rect blue"></div>
+        <div class="rect red"></div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+
+
+
+    <body>
+        <div style="padding: 30px; background-color: f8f8f8; border: 1px solid #f0f0f0;">
+            <div style="padding: 5px;">
+            <h2 style="color:gray"><i>Recta visivae Quadrantalis-Responsionis codicem dictatorem.</i></h2>
+
+            <p id="alength" style="color:gray"></p>
+             </div>
+            <!DOCTYPE html>
+            <html>
+            <table style="background-color: #f4f4f4">
+                <tr>
+                    <td>
+                        <form action="javascript:void(0);">
+                            <textarea id="qrinput" name="qrinput" style="resize:none" rows="64" cols="64" wrap="hard"></textarea>
+                        </form>
+                    </td>
+                    <td>
+                        <canvas id="myCanvas" width="300" height="300" style="border:1px solid #d3d3d3;">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+
+            main();
+            const inputHandler = function (e) {
+                main();
+            };
+
+            var qrinput = document.getElementById("qrinput");
+            qrinput.addEventListener('input', inputHandler);
+            qrinput.addEventListener('propertychange', inputHandler);
+
+            function main() {
+                var canvasLength = getMaxSquareLength();
+                var qrinput = document.getElementById("qrinput");
+                qrinput.style.height = canvasLength + "px";
+                qrinput.style.width = canvasLength + "px";
+                qrinput.style.fontFamily = "monospace !important";
+
+                var src = document.getElementById("qrinput").value;
+                var parsed_lines = parseQR(src);
+                var lines = src.split("\n");
+                var maxLength = arrayMaxLength(lines);
+                var maxALength = arrayMaxLength(parsed_lines);
+
+                qrinput.style.fontSize = Math.max(1.282051266,0.1 * canvasLength / maxLength) + "em";
+                qrinput.style.verticalAlign = "middle";
+                qrinput.style.textAlign = "justify";
+
+                if (src.length == 0) {
+                    qrinput.style.backgroundColor = "#f0f0f0";
+                } else {
+                    qrinput.style.backgroundColor = "white";
+                }
+
+                document.getElementById("alength").innerHTML = "Current Dimensions: " + maxALength + "x" + lines.length;
+                drawParsedQR(parsed_lines);
+            }
+
+            function drawQR(src) {
+                var lines = parseQR(src);
+                drawParsedQR(lines);
+            }
+
+            function drawParsedQR(lines) {
+                var myCanvas = document.getElementById("myCanvas");
+                var canvasLength = getMaxSquareLength();
+                myCanvas.width = canvasLength;
+                myCanvas.height = canvasLength;
+
+                var ctx = myCanvas.getContext("2d");
+                ctx.fillStyle = '#f1f1f1';
+                ctx.fillRect(0, 0, canvasLength, canvasLength);
+
+                var maxLength = arrayMaxLength(lines);
+                var cellWidth = canvasLength / maxLength;
+                console.log(cellWidth + "<-" + canvasLength + "-" + maxLength);
+                var fillColor = "";
+
+                for (var y = 0; y < lines.length; y++) {
+                    for (var x = 0; x < lines[y].length; x++) {
+
+                        if (lines[y][x] == ' ') {
+                            fillColor = "white";
+                        } else {
+                            fillColor = "black";
+                        }
+
+                        ctx.fillStyle = fillColor;
+                        ctx.fillRect(x * cellWidth, y * cellWidth, cellWidth + 1, cellWidth + 1);
+                    }
+                }
+            }
+
+            function getMaxSquareLength() {
+                return sqLength = 0.8 * Math.min(window.innerWidth, window.innerHeight);
+            }
+
+            function arrayMaxLength(lines) {
+                var maxHeight = lines.length;
+                var maxWidth = 1;
+                for (var i = 0; i < lines.length; i++) {
+                    if (lines[i].length > maxWidth) {
+                        maxWidth = lines[i].length;
+                    }
+                }
+                return Math.max(maxHeight, maxWidth);
+            }
+
+            function parseQR(src) {
+                var lines = src.split("\n");
+                var parsed_lines = new Array(lines.length);
+
+
+                for (var i = 0; i < parsed_lines.length; i++) {
+                    parsed_lines[i] = parseLine(lines[i]);
+
+
+                }
+                return parsed_lines;
+            }
+
+            function parseLine(line) {
+                var i = 0;
+                var latest_nd = '';
+                var sarray = "";
+
+                while (i < line.length) {
+                    var cur = line.charAt(i);
+                    var multiplier = 0;
+
+                    while (isDigit(line.charAt(i)) && i < line.length) {
+                        multiplier = multiplier * 10 + +line.charAt(i);
+                        i++;
+                    }
+
+                    if (multiplier == 0) {
+                        latest_nd = binarize(cur);
+                        multiplier = 1;
+                        i++;
+                    } else {
+                        multiplier--;
+                    }
+
+                    for (var j = 0; j < multiplier; j++) {
+                        sarray += latest_nd;
+                    }
+                }
+                return Array.from(sarray);
+            }
+
+            function binarize(ch) {
+                if (' \t\n\r\v_'.indexOf(ch) > -1) {
+                    return ' ';
+                }
+                return '.';
+            }
+
+            function isDigit(ch) {
+                return ch != null && ' \t\n\r\v_'.indexOf(ch) == -1 && +ch == ch;
+            }
+
+        </script>
+
+    </body>
+
+</html>
+</body>
+
+</html>
