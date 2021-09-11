@@ -1,25 +1,66 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <meta charset="UTF-8" />
+    <title>How to create gradient shadow css</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+</head>
+
 <body>
 
 
 
+    <style>
+        .dropdown {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to top left, gray, black);
+            border-radius: 10px;
+        }
+
+        .dropdown:before {
+            content: "";
+            z-index: -1;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: inherit;
+            transform: translateY(0px).scale(0.85);
+            filter: blur(20px);
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .dropdown:hover:before {
+            opacity: 1;
+        }
+    </style>
 
     <body>
-        <div style="padding: 30px; background-color: f8f8f8; border: 1px solid #f0f0f0;">
-            <div style="padding: 5px;">
-            <h2 style="color:gray"><i>Recta visivae Quadrantalis-Responsionis codicem dictatorem.</i></h2>
+        <div style="margin: 10px; padding:40px; display:inline-block; color: f8f8f8; border: 1px solid #f0f0f0;"
+            class="dropdown">
+            <div style="padding: 20px;">
+                <h2 style="color:#afafaf; font-size:1.6em; font-family: Arial, Helvetica, sans-serif"><i>Recta visivae Quadrantalis-Responsionis codicem dictatorem.</i></h2>
 
-            <p id="alength" style="color:gray"></p>
-             </div>
+                <h3 id="alength" style="color:#afafaf"></h3>
+            </div>
             <!DOCTYPE html>
             <html>
-            <table style="background-color: #f4f4f4">
+            <table style="background-color: #c4c4c4">
                 <tr>
                     <td>
                         <form action="javascript:void(0);">
-                            <textarea id="qrinput" name="qrinput" style="resize:none" rows="64" cols="64" wrap="hard"></textarea>
+                            <textarea id="qrinput" name="qrinput"
+                                style="resize:none; font-weight: bold; color: #646469;" rows="64" cols="64"
+                                wrap="hard"></textarea>
                         </form>
                     </td>
                     <td>
@@ -53,14 +94,14 @@
                 var maxLength = arrayMaxLength(lines);
                 var maxALength = arrayMaxLength(parsed_lines);
 
-                qrinput.style.fontSize = Math.max(1.282051266,0.1 * canvasLength / maxLength) + "em";
+                qrinput.style.fontSize = Math.max(1.282051266, 0.1 * canvasLength / maxLength) + "em";
                 qrinput.style.verticalAlign = "middle";
                 qrinput.style.textAlign = "justify";
 
                 if (src.length == 0) {
                     qrinput.style.backgroundColor = "#f0f0f0";
                 } else {
-                    qrinput.style.backgroundColor = "white";
+                    qrinput.style.backgroundColor = "#fcfcfc";
                 }
 
                 document.getElementById("alength").innerHTML = "Current Dimensions: " + maxALength + "x" + lines.length;
