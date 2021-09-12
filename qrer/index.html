@@ -112,21 +112,32 @@
                 var src = document.getElementById("qrinput").value;
                 var parsed_lines = parseQR(src);
                 var lines = src.split("\n");
-                var maxLength = arrayMaxLength(lines);
-                var maxALength = arrayMaxLength(parsed_lines);
+                var maxLength = maxArrayLength(lines);
+                var maxALength = maxArrayLength(parsed_lines);
 
                 qrinput.style.fontSize = Math.max(1.282051266, 0.1 * canvasLength / maxLength) + "em";
                 qrinput.style.verticalAlign = "middle";
                 qrinput.style.textAlign = "justify";
 
-                if (src.length == 0) {
-                    qrinput.style.backgroundColor = "#f0f0f0";
-                } else {
-                    qrinput.style.backgroundColor = "#fcfcfc";
+                 
+                var hexa = Number(Math.round(256-256*maxALength/100)).toString(16);
+                if(hexa.length==1){
+                    hexa = "0" + hexa;
                 }
+                qrinput.style.backgroundColor = "#"+hexa + "" + hexa + "" + hexa;
+                console.log(hexa);
+                // if (src.length == 0) {
+                //     qrinput.style.backgroundColor = "#f0f0f0";
+                // } else {
+                //     qrinput.style.backgroundColor = "#fcfcfc";
+                // }
 
                 document.getElementById("alength").innerHTML = "Current Dimensions: " + maxALength + "x" + lines.length;
                 drawParsedQR(parsed_lines);
+            }
+
+            function round(min, num, max){
+                return Math.min(Math.max(min, num), max);
             }
 
             function drawQR(src) {
@@ -144,7 +155,7 @@
                 ctx.fillStyle = '#f1f1f1';
                 ctx.fillRect(0, 0, canvasLength, canvasLength);
 
-                var maxLength = arrayMaxLength(lines);
+                var maxLength = maxArrayLength(lines);
                 var cellWidth = canvasLength / maxLength;
                 console.log(cellWidth + "<-" + canvasLength + "-" + maxLength);
                 var fillColor = "";
@@ -165,10 +176,11 @@
             }
 
             function getMaxSquareLength() {
-                return sqLength = 0.6 * Math.min(window.screen.height, window.screen.width);
+               
+                return sqLength = 0.5 * Math.min(window.innerWidth, window.innerHeight);
             }
 
-            function arrayMaxLength(lines) {
+            function maxArrayLength(lines) {
                 var maxHeight = lines.length;
                 var maxWidth = 1;
                 for (var i = 0; i < lines.length; i++) {
