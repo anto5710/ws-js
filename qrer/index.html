@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<he >
     <meta charset="UTF-8" />
-    <title>How to create gradient shadow css</title>
+    <title>QR Dictatorem</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="style.css" />
@@ -202,6 +202,34 @@
 
                 }
                 return parsed_lines;
+            }
+
+            function parseStack(line) {
+                var parsed = "";
+                var stack = Arrays.from(line);
+
+                var multiplier = 0;
+                var digitplacer = 0;
+
+                for(var i=0; i<line.length; i++){
+                    var last = stack.pop();
+
+                    if(isDigit(last)){
+                        multiplier += +last * Math.pow(10, digitplacer);
+                        digitplacer ++;
+                    } else {
+                        if(multiplier == 0){
+                            multiplier = 1;
+                        }
+                        last = binarize(last);
+                        for(var j = 0; j < multiplier; j++){
+                            parsed = last + parsed;
+                        }
+                        multiplier = 0;
+                        digitplacer = 0;
+                    }
+                }
+                return parsed;
             }
 
             function parseLine(line) {
